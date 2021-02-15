@@ -1,12 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import { Provider } from 'react-redux';
+import App from './App.jsx';
 import reportWebVitals from './reportWebVitals';
+import configureStore from './store/';
+import initialState from './store/initialState';
+import { ConnectedRouter } from 'connected-react-router'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+const createHistory = require("history").createHashHistory;
+const history = createHistory({
+  basename: '', // root
+  hashType: 'slash' // the default
+});
+const store = configureStore(initialState, history);
+
+if (process.NODE_ENV !== 'production') {
+  // debugging purposes
+  window.store = store;
+}
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <App />
+      </ConnectedRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
